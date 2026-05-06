@@ -824,17 +824,7 @@ function Login({db,onLogin,onRegister,onLangChange,L}){
     setErr("");setLoading(true);
     setTimeout(()=>{
       const u=db.users.find(x=>x.un===un&&x.pw===pw);
-      if(u){
-        // Check selected role matches actual role
-        const roleMap={admin:"admin",teacher:"teacher",student:"student"};
-        if(u.role!=="pending_student" && u.role!==roleMap[activeRole]){
-          const wrongMsg=L==="ar"
-            ?`هذا الحساب خاص بـ ${u.role==="admin"?"المشرف":u.role==="teacher"?"المعلم":"الطالب"} — اختر الدور الصحيح`
-            :`This account belongs to ${u.role==="admin"?"Admin":u.role==="teacher"?"Teacher":"Student"} — choose the correct role`;
-          setErr(wrongMsg);setLoading(false);return;
-        }
-        onLogin(u);return;
-      }
+      if(u){onLogin(u);return;}
       const req=(db.regRequests||[]).find(r=>r.un===un&&r.pw===pw);
       if(req){onLogin({...req,role:"pending_student"});return;}
       setErr(t(L,"wrongCreds"));setLoading(false);
